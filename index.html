@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tab Garden</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- ===== SIDEBAR (visible only on Bookmarks view) ===== -->
+  <aside class="sidebar hidden" id="sidebar">
+    <div class="sidebar-header">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="sidebar-logo">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+      </svg>
+      <span class="sidebar-title">Bookmarks</span>
+    </div>
+    <div class="sidebar-search">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+      <input type="text" id="sidebarSearch" placeholder="Filter folders..." autocomplete="off" spellcheck="false">
+    </div>
+    <div class="sidebar-item active" data-folder-id="__all__" id="sidebarAllBtn">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" /></svg>
+      <span class="sidebar-item-text">All Bookmarks</span>
+      <span class="sidebar-item-count" id="sidebarAllCount"></span>
+    </div>
+    <div class="sidebar-folders" id="sidebarFolders"></div>
+    <div class="sidebar-footer">
+      <span class="sidebar-footer-text" id="sidebarFooterText"></span>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="container" id="mainContainer">
+
+    <header>
+      <div class="header-left">
+        <h1 id="greeting"></h1>
+        <div class="date" id="dateDisplay"></div>
+      </div>
+    </header>
+
+    <!-- View Switcher -->
+    <div class="view-switcher">
+      <button class="view-tab active" data-view="tabs" id="viewTabsBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8.25V18a2.25 2.25 0 0 0 2.25 2.25h13.5A2.25 2.25 0 0 0 21 18V8.25m-18 0V6a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 6v2.25m-18 0h18" /></svg>
+        Tabs
+        <span class="view-badge" id="viewTabsBadge">0</span>
+      </button>
+      <button class="view-tab" data-view="bookmarks" id="viewBookmarksBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" /></svg>
+        Bookmarks
+        <span class="view-badge" id="viewBookmarksBadge">0</span>
+      </button>
+    </div>
+
+    <!-- Search bar -->
+    <div class="search-bar">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+      <input type="text" id="searchInput" placeholder="Search tabs..." autocomplete="off" spellcheck="false">
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row" id="statsRow"></div>
+
+    <!-- Tab Out dupe banner -->
+    <div class="tab-cleanup-banner" id="tabOutDupeBanner" style="display:none">
+      <div class="tab-cleanup-left">
+        <div class="tab-cleanup-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" /></svg>
+        </div>
+        <div class="tab-cleanup-text">
+          You have <strong id="tabOutDupeCount"></strong> Tab Garden tabs open. Keep just this one?
+        </div>
+      </div>
+      <button class="tab-cleanup-btn" data-action="close-tabout-dupes">Close extras</button>
+    </div>
+
+    <!-- Active folder banner (bookmarks) -->
+    <div class="active-folder-banner" id="activeFolderBanner" style="display:none">
+      <span class="active-folder-label" id="activeFolderLabel"></span>
+      <button class="active-folder-clear" id="activeFolderClear">Show all</button>
+    </div>
+
+    <div class="dashboard-columns" id="dashboardColumns">
+
+      <!-- ===== TABS VIEW (default) ===== -->
+      <div class="view-panel active" id="tabsPanel">
+        <div class="section-header" id="tabsHeader" style="display:none">
+          <h2>Open tabs</h2>
+          <div class="section-line"></div>
+          <div class="section-count" id="tabsCount"></div>
+        </div>
+        <div class="cards-grid" id="tabsGrid"></div>
+      </div>
+
+      <!-- ===== BOOKMARKS VIEW ===== -->
+      <div class="view-panel" id="bookmarksPanel">
+        <div class="section-header" id="bookmarksHeader" style="display:none">
+          <h2>Your bookmarks</h2>
+          <div class="section-line"></div>
+          <div class="section-count" id="bookmarksCount"></div>
+        </div>
+        <div class="cards-grid" id="bookmarksGrid"></div>
+        <div id="bookmarkSearchResults" style="display:none"></div>
+      </div>
+
+      <!-- Saved for Later column -->
+      <div class="deferred-column" id="deferredColumn" style="display:none">
+        <div class="section-header">
+          <h2>Saved for later</h2>
+          <div class="section-line"></div>
+          <div class="section-count" id="deferredCount"></div>
+        </div>
+        <div class="deferred-list" id="deferredList"></div>
+        <div class="deferred-empty" id="deferredEmpty" style="display:none">Nothing saved. Living in the moment.</div>
+        <div class="deferred-archive" id="deferredArchive" style="display:none">
+          <button class="archive-toggle" id="archiveToggle">
+            <svg class="archive-chevron" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+            Archive <span class="archive-count" id="archiveCount"></span>
+          </button>
+          <div class="archive-body" id="archiveBody" style="display:none">
+            <input type="text" class="archive-search" id="archiveSearch" placeholder="Search archived tabs...">
+            <div class="archive-list" id="archiveList"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer>
+      <div class="footer-stats">
+        <div class="stat">
+          <div class="stat-num" id="footerStat">—</div>
+          <div class="stat-label" id="footerStatLabel">Open tabs</div>
+        </div>
+      </div>
+      <div class="footer-right">
+        <a href="https://github.com/pvjagtap/Tab-Garden" target="_top">Tab Garden</a> by <a href="https://github.com/pvjagtap" target="_top">pvjagtap</a>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+  <span id="toastText"></span>
+</div>
+
+<script src="config.local.js" onerror="/* no personal config */"></script>
+<script src="app.js"></script>
+</body>
+</html>
